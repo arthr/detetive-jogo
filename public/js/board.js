@@ -18,12 +18,17 @@ function initBoard(ctx, config) {
 
     // Função para desenhar a grade
     function drawGrid() {
-        ctx.strokeStyle = '#000';
+        const colorA = '#e0e0e0';
+        const colorB = '#c0c0c0';
         for (let x = 0; x < gridSize; x++) {
             for (let y = 0; y < gridSize; y++) {
                 const posX = x * quadradoLargura;
                 const posY = y * quadradoAltura;
 
+                ctx.fillStyle = (x + y) % 2 === 0 ? colorA : colorB;
+                ctx.fillRect(posX, posY, quadradoLargura, quadradoAltura);
+
+                ctx.strokeStyle = '#000';
                 ctx.beginPath();
                 ctx.rect(posX, posY, quadradoLargura, quadradoAltura);
                 ctx.stroke();
@@ -56,6 +61,7 @@ function initBoard(ctx, config) {
         ctx.fillText(room.name.toUpperCase(), x + width / 2, y + height / 2);
     }
 
+    // Função para desenhar os quartos
     function drawRooms(room, quadradoLargura, quadradoAltura) {
         room.doors.forEach(door => {
             const doorX = door.x * quadradoLargura;
@@ -67,10 +73,17 @@ function initBoard(ctx, config) {
     // Função para desenhar passagens secretas
     function drawSecretPassage(room, quadradoLargura, quadradoAltura) {
         if (room.secretPassage) {
-            const { x, y, direction } = room.secretPassage;
+            const { x, y, direction, destination } = room.secretPassage;
             const passageX = x * quadradoLargura;
             const passageY = y * quadradoAltura;
             drawPassage(passageX, passageY, quadradoLargura, quadradoAltura, direction, secretPassageColor);
+            
+            // Desenhar o texto do destino
+            ctx.fillStyle = 'purple';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(destination, passageX + quadradoLargura / 2, passageY + quadradoAltura / 2);
         }
     }
 
