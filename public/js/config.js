@@ -5,7 +5,7 @@ const config = {
     gridSize: 25,
     showCoordinates: false,
     doorsColor: 'rgba(255, 255, 255, 0.8)',
-    secretPassageColor: 'rgba(255, 255, 255, 0.8)',
+    secretPassageColor: 'rgba(255, 165, 0, 0.8)',
     rooms: [
         { x: 0, y: 0, width: 7, height: 5, name: 'Restaurante', imageUrl: 'images/restaurante.webp', doors: [{ x: 7, y: 2, direction: 'left' }] },
         { x: 10, y: 0, width: 6, height: 6, name: 'Prefeitura', imageUrl: 'images/prefeitura.webp', doors: [{ x: 11, y: 6, direction: 'up' }], secretPassage: { x: 12, y: 0, direction: 'up', destination: 'Estação de Trem' } },

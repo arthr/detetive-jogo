@@ -130,6 +130,8 @@ function initBoard(ctx, config) {
     // Função para desenhar portas e passagens secretas
     function drawPassage(x, y, width, height, direction, color) {
         ctx.fillStyle = color;
+        ctx.shadowColor = 'black'; // Adicionar sombra
+        ctx.shadowBlur = 5;
         ctx.beginPath();
         switch (direction) {
             case 'up':
