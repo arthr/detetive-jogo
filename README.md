@@ -6,19 +6,21 @@ Este projeto é uma implementação digital de um jogo de tabuleiro clássico, c
 
 ## Estrutura do Projeto
 
+```
 /public
-├── index.html
-├── css
-│ └── styles.css
-├── js
-│ ├── board.js
-│ ├── config.js
-│ ├── game.js
-│ └── socket.js
+  ├── index.html
+  ├── css
+  │   └── styles.css
+  ├── js
+  │   ├── board.js
+  │   ├── config.js
+  │   ├── game.js
+  │   └── socket.js
 /server
-├── gameLogic.js
-├── server.js
-└── utils.js
+  ├── gameLogic.js
+  ├── server.js
+  └── utils.js
+```
 
 
 - **index.html:** O arquivo HTML principal contendo o canvas e a estrutura básica.
