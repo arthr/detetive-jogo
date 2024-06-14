@@ -51,12 +51,12 @@ function initBoard(ctx, config) {
     // Função para desenhar o nome do quarto
     function writeRoomName(room, x, y, width, height) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        ctx.font = '25px Arial Black';
+        ctx.font = `${18 * scaleFactor}px Arial Black`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.shadowColor = 'black'; // Adicionar sombra
-        ctx.shadowOffsetX = 1; // Definir deslocamento horizontal da sombra
-        ctx.shadowOffsetY = 2; // Definir deslocamento vertical da sombra
+        ctx.shadowOffsetX = 1 * scaleFactor; // Definir deslocamento horizontal da sombra
+        ctx.shadowOffsetY = 2 * scaleFactor; // Definir deslocamento vertical da sombra
         ctx.shadowBlur = 0; // Aumentar o desfoque da sombra
         ctx.fillText(room.name.toUpperCase(), x + width / 2, y + height / 2);
     }
@@ -80,14 +80,14 @@ function initBoard(ctx, config) {
 
             // Desenhar o texto do destino
             ctx.fillStyle = 'orange';
-            ctx.font = '12px Verdana';
+            ctx.font = `${8 * scaleFactor}px Verdana`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.letterSpacing = '2px';
-            ctx.shadowColor = 'black'; // Remover sombra
-            ctx.shadowBlur = 2;
-            ctx.shadowOffsetX = 1;
-            ctx.shadowOffsetY = 2;
+            ctx.letterSpacing = `${0.1 * scaleFactor}px`;
+            ctx.shadowColor = 'black';
+            ctx.shadowBlur = 1 * scaleFactor;
+            ctx.shadowOffsetX = 1 * scaleFactor;
+            ctx.shadowOffsetY = 2 * scaleFactor;
 
             let textX = passageX;
             let textY = passageY;
@@ -115,7 +115,7 @@ function initBoard(ctx, config) {
                     break;
             }
             ctx.fillText(mensagemA.toUpperCase(), textX, textY);
-            ctx.fillText(mensagemB.toUpperCase(), textX, textY + 10);
+            ctx.fillText(mensagemB.toUpperCase(), textX, textY + 10 * scaleFactor);
         }
     }
 
