@@ -77,13 +77,45 @@ function initBoard(ctx, config) {
             const passageX = x * quadradoLargura;
             const passageY = y * quadradoAltura;
             drawPassage(passageX, passageY, quadradoLargura, quadradoAltura, direction, secretPassageColor);
-            
+
             // Desenhar o texto do destino
-            ctx.fillStyle = 'purple';
-            ctx.font = '12px Arial';
+            ctx.fillStyle = 'orange';
+            ctx.font = '12px Verdana';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(destination, passageX + quadradoLargura / 2, passageY + quadradoAltura / 2);
+            ctx.letterSpacing = '2px';
+            ctx.shadowColor = 'black'; // Remover sombra
+            ctx.shadowBlur = 2;
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 2;
+
+            let textX = passageX;
+            let textY = passageY;
+            let mensagemA = 'Entrada secreta';
+            let mensagemB = 'para ' + destination;
+
+            switch (direction) {
+                case 'up':
+                    textX += quadradoLargura / 2;
+                    textY += quadradoAltura / 1.25;
+                    break;
+                case 'down':
+                    textX += quadradoLargura / 2;
+                    textY -= quadradoAltura * 0.25;
+                    break;
+                case 'left':
+                    ctx.textAlign = 'left';
+                    textX += quadradoLargura * 0.75;
+                    textY += quadradoAltura * 0.35;
+                    break;
+                case 'right':
+                    ctx.textAlign = 'right';
+                    textX += quadradoLargura * 0.25;
+                    textY += quadradoAltura * 0.35;
+                    break;
+            }
+            ctx.fillText(mensagemA.toUpperCase(), textX, textY);
+            ctx.fillText(mensagemB.toUpperCase(), textX, textY + 10);
         }
     }
 
