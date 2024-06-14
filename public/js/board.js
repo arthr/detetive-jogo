@@ -31,6 +31,10 @@ function initBoard(ctx, config) {
                 ctx.strokeStyle = '#000';
                 ctx.beginPath();
                 ctx.rect(posX, posY, quadradoLargura, quadradoAltura);
+                ctx.shadowColor = 'white'; // Adicionar sombra
+                ctx.shadowBlur = 9;
+                ctx.shadowOffsetX = -1;
+                ctx.shadowOffsetY = -1;
                 ctx.stroke();
 
                 if (showCoordinates) {
@@ -50,15 +54,19 @@ function initBoard(ctx, config) {
 
     // Função para desenhar o nome do quarto
     function writeRoomName(room, x, y, width, height) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.font = `${18 * scaleFactor}px Arial Black`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.shadowColor = 'black'; // Adicionar sombra
-        ctx.shadowOffsetX = 1 * scaleFactor; // Definir deslocamento horizontal da sombra
-        ctx.shadowOffsetY = 2 * scaleFactor; // Definir deslocamento vertical da sombra
-        ctx.shadowBlur = 0; // Aumentar o desfoque da sombra
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.6)'; // Adicionar sombra
+        ctx.shadowOffsetX = 0 * scaleFactor; // Definir deslocamento horizontal da sombra
+        ctx.shadowOffsetY = 0 * scaleFactor; // Definir deslocamento vertical da sombra
+        ctx.shadowBlur = 2; // Aumentar o desfoque da sombra
         ctx.fillText(room.name.toUpperCase(), x + width / 2, y + height / 2);
+
+        ctx.shadowBlur = 0; // Remover o desfoque da sombra
+        ctx.strokeStyle = 'rgba(255, 255, 255, 1)';
+        ctx.strokeText(room.name.toUpperCase(), x + width / 2, y + height / 2);
     }
 
     // Função para desenhar os quartos
