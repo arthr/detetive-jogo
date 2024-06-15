@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import boardBackground from '../../assets/images/board.png';
 import hospitalBackground from '../../assets/images/hospital.png';
+import restauranteBackground from '../../assets/images/restaurante.png';
 import playerPiece from '../../assets/images/player.png';
 
 export default class BootScene extends Phaser.Scene {
@@ -11,6 +12,7 @@ export default class BootScene extends Phaser.Scene {
     preload() {
         this.load.image('board', boardBackground);
         this.load.image('hospital', hospitalBackground);
+        this.load.image('restaurante', restauranteBackground);
         this.load.image('player', playerPiece);
     }
 
