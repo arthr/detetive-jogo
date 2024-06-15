@@ -10,11 +10,12 @@ export default class Player {
             startRoom.roomSprite.y + (startRoom.roomSprite.displayHeight / 2),
             'player'
         ).setOrigin(0.5, 0.5);
+        console.log(`Player initialized in room: ${this.currentRoom.name}`);
     }
 
     moveTo(pointer) {
-        const targetX = Math.floor(pointer.x / this.tileSize) * this.tileSize;
-        const targetY = Math.floor(pointer.y / this.tileSize) * this.tileSize;
+        const targetX = Math.floor(pointer.x / this.tileSize) * this.tileSize + this.tileSize / 2;
+        const targetY = Math.floor(pointer.y / this.tileSize) * this.tileSize + this.tileSize / 2;
 
         const deltaX = Math.abs(targetX - this.sprite.x);
         const deltaY = Math.abs(targetY - this.sprite.y);
@@ -26,26 +27,30 @@ export default class Player {
         // Check if player is in a room
         if (this.currentRoom) {
             const doorTiles = this.currentRoom.doors.map(door => ({
-                x: door.x * this.tileSize,
-                y: door.y * this.tileSize
+                x: door.x * this.tileSize + this.tileSize / 2,
+                y: door.y * this.tileSize + this.tileSize / 2
             }));
 
             // Allow movement only to doors or secret passage
             const canMoveToDoor = doorTiles.some(tile => tile.x === targetX && tile.y === targetY);
             const canMoveToSecretPassage = this.currentRoom.secretPassage &&
-                targetX === this.currentRoom.secretPassage.x * this.tileSize &&
-                targetY === this.currentRoom.secretPassage.y * this.tileSize;
+                targetX === this.currentRoom.secretPassage.x * this.tileSize + this.tileSize / 2 &&
+                targetY === this.currentRoom.secretPassage.y * this.tileSize + this.tileSize / 2;
 
             if (canMoveToDoor || canMoveToSecretPassage) {
                 this.scene.tweens.add({
                     targets: this.sprite,
-                    x: targetX + this.tileSize / 2,
-                    y: targetY + this.tileSize / 2,
+                    x: targetX,
+                    y: targetY,
                     duration: 300,
                     ease: 'Power2',
                     onComplete: () => {
+                        console.log(`Moved to: (${targetX}, ${targetY})`);
                         if (canMoveToSecretPassage) {
                             this.useSecretPassage();
+                        }
+                        if (canMoveToDoor) {
+                            this.leaveRoom();
                         }
                     }
                 });
@@ -55,10 +60,13 @@ export default class Player {
             if ((deltaX === this.tileSize && deltaY === 0) || (deltaY === this.tileSize && deltaX === 0)) {
                 this.scene.tweens.add({
                     targets: this.sprite,
-                    x: targetX + this.tileSize / 2,
-                    y: targetY + this.tileSize / 2,
+                    x: targetX,
+                    y: targetY,
                     duration: 300,
                     ease: 'Power2',
+                    onComplete: () => {
+                        console.log(`Moved to: (${targetX}, ${targetY})`);
+                    }
                 });
             }
         }
