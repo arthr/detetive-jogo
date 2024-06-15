@@ -23,5 +23,8 @@ export default class GameScene extends Phaser.Scene {
 
         // Habilita interação com o mouse
         this.input.on('pointerdown', pointer => this.player.moveTo(pointer));
+
+        // Adiciona colisão entre o jogador e as salas
+        this.physics.add.collider(this.player.sprite, this.rooms.map(room => room.roomSprite));
     }
 }

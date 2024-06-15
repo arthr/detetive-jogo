@@ -4,6 +4,9 @@ export default class Room {
     constructor(scene, roomConfig, tileSize) {
         this.scene = scene;
         this.tileSize = tileSize;
+        this.name = roomConfig.name;
+        this.doors = roomConfig.doors;
+        this.secretPassage = roomConfig.secretPassage;
         this.createRoom(roomConfig);
     }
 
@@ -32,5 +35,10 @@ export default class Room {
                 0.5
             ).setOrigin(0, 0);
         });
+
+        // Add collision callback to enter the room
+        this.scene.physics.add.collider(this.scene.player.sprite, this.roomSprite, () => {
+            this.scene.player.enterRoom(this);
+        }, null, this.scene);
     }
 }
