@@ -12,7 +12,7 @@ export default class Room {
 
     createRoom(roomConfig) {
         // Cria a sala usando a imagem
-        this.roomSprite = this.scene.physics.add.staticSprite(
+        this.roomSprite = this.scene.physics.add.staticImage(
             roomConfig.x * this.tileSize,
             roomConfig.y * this.tileSize,
             roomConfig.image
@@ -35,10 +35,5 @@ export default class Room {
                 0.5
             ).setOrigin(0, 0);
         });
-
-        // Add collision callback to enter the room
-        this.scene.physics.add.collider(this.scene.player.sprite, this.roomSprite, () => {
-            this.scene.player.enterRoom(this);
-        }, null, this.scene);
     }
 }

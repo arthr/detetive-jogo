@@ -1,11 +1,15 @@
 import Phaser from 'phaser';
 
 export default class Player {
-    constructor(scene, x, y, tileSize) {
+    constructor(scene, startRoom, tileSize) {
         this.scene = scene;
         this.tileSize = tileSize;
-        this.sprite = this.scene.physics.add.sprite(x * this.tileSize, y * this.tileSize, 'player').setOrigin(0.5, 0.5);
-        this.currentRoom = null; // Track the room the player is currently in
+        this.currentRoom = startRoom; // Define a sala inicial do jogador
+        this.sprite = this.scene.physics.add.sprite(
+            startRoom.roomSprite.x + (startRoom.roomSprite.displayWidth / 2),
+            startRoom.roomSprite.y + (startRoom.roomSprite.displayHeight / 2),
+            'player'
+        ).setOrigin(0.5, 0.5);
     }
 
     moveTo(pointer) {
@@ -14,6 +18,10 @@ export default class Player {
 
         const deltaX = Math.abs(targetX - this.sprite.x);
         const deltaY = Math.abs(targetY - this.sprite.y);
+
+        console.log(`Trying to move to: (${targetX}, ${targetY})`);
+        console.log(`Current position: (${this.sprite.x}, ${this.sprite.y})`);
+        console.log(`Current room: ${this.currentRoom ? this.currentRoom.name : 'None'}`);
 
         // Check if player is in a room
         if (this.currentRoom) {
@@ -57,10 +65,12 @@ export default class Player {
     }
 
     enterRoom(room) {
+        console.log(`Entered room: ${room.name}`);
         this.currentRoom = room;
     }
 
     leaveRoom() {
+        console.log('Left room');
         this.currentRoom = null;
     }
 
@@ -71,6 +81,7 @@ export default class Player {
                 const passage = destinationRoom.secretPassage;
                 this.sprite.setPosition(passage.x * this.tileSize + this.tileSize / 2, passage.y * this.tileSize + this.tileSize / 2);
                 this.currentRoom = destinationRoom;
+                console.log(`Used secret passage to: ${destinationRoom.name}`);
             }
         }
     }

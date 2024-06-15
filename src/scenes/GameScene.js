@@ -18,13 +18,21 @@ export default class GameScene extends Phaser.Scene {
         // Cria as salas
         this.rooms = config.rooms.map(roomConfig => new Room(this, roomConfig, TILE_SIZE));
 
+        // Define a sala inicial do jogador
+        const startRoomConfig = config.rooms.find(room => room.name === 'Restaurante'); // Ajuste o nome conforme necessário
+        const startRoom = this.rooms.find(room => room.name === startRoomConfig.name);
+
         // Cria o jogador
-        this.player = new Player(this, 1, 1, TILE_SIZE);
+        this.player = new Player(this, startRoom, TILE_SIZE);
 
         // Habilita interação com o mouse
         this.input.on('pointerdown', pointer => this.player.moveTo(pointer));
 
         // Adiciona colisão entre o jogador e as salas
-        this.physics.add.collider(this.player.sprite, this.rooms.map(room => room.roomSprite));
+        this.rooms.forEach(room => {
+            this.physics.add.collider(this.player.sprite, room.roomSprite, () => {
+                this.player.enterRoom(room);
+            }, null, this);
+        });
     }
 }
