@@ -35,7 +35,7 @@ export default class Board {
 
     showTileBorders() {
         const graphics = this.scene.add.graphics();
-        graphics.lineStyle(1, 0xffffff, 0.3);
+        graphics.lineStyle(1, 0x000000, 0.3);
 
         for (let y = 0; y < Math.floor(this.scene.scale.height / this.tileSize); y++) {
             for (let x = 0; x < Math.floor(this.scene.scale.width / this.tileSize); x++) {

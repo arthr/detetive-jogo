@@ -73,8 +73,19 @@ export default class Player {
     }
 
     enterRoom(room) {
-        console.log(`Entered room: ${room.name}`);
-        this.currentRoom = room;
+        // Ensure we only enter the room if the player is centered on a door
+        const playerX = Math.floor(this.sprite.x);
+        const playerY = Math.floor(this.sprite.y);
+        const doorTiles = room.doors.map(door => ({
+            x: door.x * this.tileSize + this.tileSize / 2,
+            y: door.y * this.tileSize + this.tileSize / 2
+        }));
+        const isOnDoor = doorTiles.some(tile => tile.x === playerX && tile.y === playerY);
+
+        if (isOnDoor) {
+            console.log(`Entered room: ${room.name}`);
+            this.currentRoom = room;
+        }
     }
 
     leaveRoom() {
