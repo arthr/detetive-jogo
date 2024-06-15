@@ -1,14 +1,20 @@
 import Phaser from 'phaser';
+import boardBackground from '../../assets/images/board.png';
+import hospitalBackground from '../../assets/images/hospital.png';
+import playerPiece from '../../assets/images/player.png';
 
-class BootScene extends Phaser.Scene {
+export default class BootScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'BootScene' });
+        super('BootScene');
+    }
+
+    preload() {
+        this.load.image('board', boardBackground);
+        this.load.image('hospital', hospitalBackground);
+        this.load.image('player', playerPiece);
     }
 
     create() {
-        // Adicionar elementos de UI como botões
-        
+        this.scene.start('GameScene');
     }
 }
-
-export default BootScene;
