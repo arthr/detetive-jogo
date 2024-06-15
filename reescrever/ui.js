@@ -1,3 +1,7 @@
+import config from './config.js';
+
+console.log(config);
+
 function createRoomList() {
     const roomList = document.getElementById('room-list');
     roomList.innerHTML = ''; // Limpar lista existente
