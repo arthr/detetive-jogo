@@ -38,7 +38,7 @@ export default class Board {
         graphics.lineStyle(1, 0xffffff, 0.3);
 
         for (let y = 0; y < Math.floor(this.scene.scale.height / this.tileSize); y++) {
-            for (let x = 0; y < Math.floor(this.scene.scale.width / this.tileSize); x++) {
+            for (let x = 0; x < Math.floor(this.scene.scale.width / this.tileSize); x++) {
                 graphics.strokeRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
             }
         }
