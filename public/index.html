@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo Detetive</title>
+    <title>Board Game</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
     <div class="container">
-        <canvas id="gameCanvas"></canvas>
+        <div class="sidebar">
+            <h2>Ficha do Jogador</h2>
+            <div class="section">
+                <h3>Suspeitos</h3>
+                <label><input type="checkbox"> Sr. Marinho</label><br>
+                <label><input type="checkbox"> Dona Branca</label><br>
+                <label><input type="checkbox"> Sr. Marrom</label><br>
+                <!-- Adicione mais suspeitos conforme necessário -->
+            </div>
+            <div class="section">
+                <h3>Armas</h3>
+                <label><input type="checkbox"> Faca</label><br>
+                <label><input type="checkbox"> Revólver</label><br>
+                <label><input type="checkbox"> Corda</label><br>
+                <!-- Adicione mais armas conforme necessário -->
+            </div>
+            <div class="section">
+                <h3>Salas</h3>
+                <label><input type="checkbox"> Biblioteca</label><br>
+                <label><input type="checkbox"> Salão de Baile</label><br>
+                <label><input type="checkbox"> Cozinha</label><br>
+                <!-- Adicione mais salas conforme necessário -->
+            </div>
+            <div class="section">
+                <h3>Ajuste de Escala</h3>
+                <button onclick="decreaseScale.call(this)">-</button>
+                <span id="scale-value"></span>
+                <button onclick="increaseScale.call(this)">+</button>
+            </div>
+        </div>
+        <canvas id="gameCanvas" width="800" height="800"></canvas>
     </div>
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
@@ -17,4 +49,5 @@
     <script src="js/items.js"></script>
     <script src="js/game.js"></script>
 </body>
+
 </html>

@@ -1,7 +1,11 @@
+const canvas = document.getElementById('gameCanvas');
+const sidebarWidth = document.querySelector('.sidebar').offsetWidth;
+const newWidth = window.innerWidth - sidebarWidth;
+
 const config = {
-    scaleFactor: 1.5,
-    canvasWidth: 800,
-    canvasHeight: 800,
+    scaleFactor: 1,
+    canvasWidth: newWidth,
+    canvasHeight: newWidth,
     gridSize: 25,
     showCoordinates: false,
     doorsColor: 'rgba(255, 255, 255, 0.8)',

@@ -2,6 +2,8 @@ function initBoard(ctx, config) {
     const { scaleFactor, gridSize, rooms, showCoordinates, doorsColor, secretPassageColor } = config;
     const canvas = ctx.canvas; // Obter a referência do canvas
 
+    console.log(scaleFactor);
+
     const quadradoLargura = canvas.width / gridSize;
     const quadradoAltura = canvas.height / gridSize;
 

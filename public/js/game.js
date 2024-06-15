@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = scale(config.canvasHeight, config.scaleFactor);
 
     // Inicializar o tabuleiro e outros elementos
+    document.getElementById('scale-value').textContent = config.scaleFactor.toFixed(1);
     initBoard(ctx, config);
     // initCharacters(ctx, config);
     // initItems(ctx, config);
