@@ -45,7 +45,9 @@ export default class GameScene extends Phaser.Scene {
             }, null, this);
         });
 
-        // Adiciona a camada de depuração
-        addDebugLayer(this, this.rooms, TILE_SIZE);
+        // Adiciona a camada de depuração se estiver ativada
+        if (config.debugTileLayer) {
+            addDebugLayer(this, this.rooms, TILE_SIZE);
+        }
     }
 }
