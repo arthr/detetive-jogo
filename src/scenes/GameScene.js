@@ -112,12 +112,11 @@ export default class GameScene extends Phaser.Scene {
         let path = this.pathfinding.findPath({ x: startX, y: startY }, target);
         console.log(startX, startY, target, path);
 
-        // Filtra o caminho para ignorar tiles que estão dentro das salas
-        const filteredPath = path.filter(step => this.pathfinding.grid[step.y][step.x] !== 3);
-        console.log('Filtered Path:', filteredPath);
+        // Verifica o limite de movimento, ignorando tiles dentro das salas
+        const movementTiles = path.filter(step => this.pathfinding.grid[step.y][step.x] !== 3);
+        console.log('Filtered Path (Movement Tiles):', movementTiles);
 
-        // Verifica se o caminho encontrado excede o limite de movimento
-        if (filteredPath.length > config.maxMovement) {
+        if (movementTiles.length > config.maxMovement) {
             console.log(`Movimento excede o limite de ${config.maxMovement} tiles`);
             return;
         }
@@ -126,6 +125,7 @@ export default class GameScene extends Phaser.Scene {
             this.moveAlongPath(path, onComplete);
         }
     }
+
 
 
 

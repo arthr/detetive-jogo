@@ -1,9 +1,9 @@
 export const config = {
     tileSize: 40,
-    //maxMovement: null,
+    maxMovement: 6,
     showCoordinates: false,
     showTileBorders: false,
-    debugPathfinding: true,
+    debugPathfinding: false,
     rooms: [
         { x: 0, y: 0, width: 7, height: 5, name: 'Restaurante', image: 'restaurante', doors: [{ x: 7, y: 2, direction: 'left' }] },
         { x: 10, y: 0, width: 6, height: 6, name: 'Prefeitura', image: 'prefeitura', doors: [{ x: 11, y: 6, direction: 'up' }], secretPassage: { x: 12, y: 0, direction: 'up', destination: 'Estação de Trem' } },
