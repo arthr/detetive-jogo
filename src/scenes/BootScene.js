@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
+import playerPiece from '../../assets/images/player.png';
+import tileBackground from '../../assets/images/tile.png';
 import boardBackground from '../../assets/images/board.png';
 import hospitalBackground from '../../assets/images/hospital.png';
 import restauranteBackground from '../../assets/images/restaurante.png';
-import playerPiece from '../../assets/images/player.png';
 
 export default class BootScene extends Phaser.Scene {
     constructor() {
@@ -14,6 +15,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('hospital', hospitalBackground);
         this.load.image('restaurante', restauranteBackground);
         this.load.image('player', playerPiece);
+        this.load.image('tile-bg', tileBackground);
     }
 
     create() {
