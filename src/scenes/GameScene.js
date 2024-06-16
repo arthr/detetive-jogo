@@ -3,8 +3,8 @@ import { config } from '../config';
 import Room from '../entities/room';
 import Player from '../entities/player';
 import Board from '../entities/board';
-import { addDebugTilesLayer } from '../utils/debugTilesLayer'; // Importa a camada de depuração
 import Pathfinding from '../utils/pathfinding';
+import { addDebugTilesLayer } from '../utils/debugTilesLayer'; // Certifique-se de importar addDebugLayer
 
 const TILE_SIZE = config.tileSize;
 
@@ -53,7 +53,7 @@ export default class GameScene extends Phaser.Scene {
         });
 
         // Adiciona a camada de depuração se estiver ativada
-        if (config.debugTileLayer) {
+        if (config.addDebugTilesLayer) {
             addDebugTilesLayer(this, this.rooms, TILE_SIZE);
         }
     }
@@ -81,15 +81,24 @@ export default class GameScene extends Phaser.Scene {
         const path = this.pathfinding.findPath({ x: startX, y: startY }, { x: targetX, y: targetY });
 
         if (path.length > 0) {
-            const tweens = path.map((step, index) => ({
+            this.moveAlongPath(path);
+        }
+    }
+
+    moveAlongPath(path) {
+        const tweens = [];
+
+        path.forEach((step, index) => {
+            tweens.push({
                 targets: this.player.sprite,
                 x: step.x * TILE_SIZE + TILE_SIZE / 2,
                 y: step.y * TILE_SIZE + TILE_SIZE / 2,
                 duration: 200,
+                ease: 'Linear',
                 delay: index * 200
-            }));
+            });
+        });
 
-            this.tweens.timeline({ tweens });
-        }
+        this.tweens.addMultiple(tweens);
     }
 }
