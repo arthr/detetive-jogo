@@ -54,18 +54,23 @@ export default class GameScene extends Phaser.Scene {
 
         // Marcar as salas e portas na grid
         this.rooms.forEach(room => {
-            for (let y = room.y; y < room.y + room.height; y++) {
-                for (let x = room.x; x < room.x + room.width; x++) {
-                    if (this.isValidTile(x, y)) {
-                        grid[y][x] = 1; // Marca como sala
+            if (room) {
+                console.log(room.name, room);
+                for (let y = 0; y < room.height; y++) {
+                    for (let x = 0; x < room.width; x++) {
+                        const gridX = room.x + x;
+                        const gridY = room.y + y;
+                        if (this.isValidTile(gridX, gridY)) {
+                            grid[gridY][gridX] = 1; // Marca como sala
+                        }
                     }
                 }
+                room.doors.forEach(door => {
+                    if (this.isValidTile(door.x, door.y)) {
+                        grid[door.y][door.x] = 2; // Marca as portas como passáveis
+                    }
+                });
             }
-            room.doors.forEach(door => {
-                if (this.isValidTile(door.x, door.y)) {
-                    grid[door.y][door.x] = 2; // Marca as portas como passáveis
-                }
-            });
         });
 
         return grid;
@@ -130,6 +135,13 @@ export default class GameScene extends Phaser.Scene {
                 }
                 graphics.fillStyle(color, 0.5);
                 graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+                // Adiciona o número do tipo do tile no centro
+                this.add.text(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2, tile, {
+                    fontSize: '12px',
+                    color: '#ffffff',
+                    align: 'center'
+                }).setOrigin(0.5);
             }
         }
     }

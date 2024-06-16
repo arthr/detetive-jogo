@@ -93,7 +93,7 @@ export default class Pathfinding {
 
     // Função para verificar se um tile é passável
     isPassable(x, y) {
-        return this.grid[y][x] === 0; // 0 representa um tile passável, 1 representa um obstáculo
+        return this.grid[y][x] === 0 || this.grid[y][x] === 2; // 0 representa um tile passável, 2 representa uma porta passável
     }
 
     // Função para calcular a distância entre dois nós

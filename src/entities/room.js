@@ -5,6 +5,10 @@ export default class Room {
         this.scene = scene;
         this.tileSize = tileSize;
         this.name = roomConfig.name;
+        this.width = roomConfig.width;
+        this.height = roomConfig.height;
+        this.x = roomConfig.x;
+        this.y = roomConfig.y;
         this.doors = roomConfig.doors;
         this.secretPassage = roomConfig.secretPassage;
         this.createRoom(roomConfig);
