@@ -78,12 +78,8 @@ export default class Pathfinding {
             openSet.splice(openSet.indexOf(currentNode), 1);
             closedSet.push(currentNode);
 
-            console.log('Current Node:', currentNode);
-            console.log('Open Set:', openSet);
-            console.log('Closed Set:', closedSet);
-
             this.getNeighbors(currentNode).forEach(neighbor => {
-                if (closedSet.includes(neighbor) || !this.isPassable(neighbor.x, neighbor.y)) {
+                if (closedSet.includes(neighbor)) {
                     return;
                 }
 
@@ -104,6 +100,7 @@ export default class Pathfinding {
 
         return []; // Nenhum caminho encontrado
     }
+
 
     // Função para criar um nó
     createNode(x, y, parent) {
@@ -134,12 +131,10 @@ export default class Pathfinding {
         const neighbors = [];
         const { x, y } = node;
 
-        if (this.isValidTile(x + 1, y)) neighbors.push(this.createNode(x + 1, y, node));
-        if (this.isValidTile(x - 1, y)) neighbors.push(this.createNode(x - 1, y, node));
-        if (this.isValidTile(x, y + 1)) neighbors.push(this.createNode(x, y + 1, node));
-        if (this.isValidTile(x, y - 1)) neighbors.push(this.createNode(x, y - 1, node));
-
-        console.log('Neighbors:', neighbors);
+        if (this.isValidTile(x + 1, y) && this.isPassable(x + 1, y, node)) neighbors.push(this.createNode(x + 1, y, node));
+        if (this.isValidTile(x - 1, y) && this.isPassable(x - 1, y, node)) neighbors.push(this.createNode(x - 1, y, node));
+        if (this.isValidTile(x, y + 1) && this.isPassable(x, y + 1, node)) neighbors.push(this.createNode(x, y + 1, node));
+        if (this.isValidTile(x, y - 1) && this.isPassable(x, y - 1, node)) neighbors.push(this.createNode(x, y - 1, node));
 
         return neighbors;
     }
@@ -147,15 +142,15 @@ export default class Pathfinding {
     // Função para verificar se um tile é válido
     isValidTile(x, y) {
         const valid = x >= 0 && x < this.grid[0].length && y >= 0 && y < this.grid.length;
-        console.log(`isValidTile(${x}, ${y}):`, valid);
         return valid;
     }
 
     // Função para verificar se um tile é passável
-    isPassable(x, y) {
+    isPassable(x, y, currentNode) {
         const tile = this.grid[y][x];
-        const passable = tile === 0 || tile === 2 || tile === 3;
-        console.log(`isPassable(${x}, ${y}):`, passable);
+        const currentTile = this.grid[currentNode.y][currentNode.x];
+        const passable = tile === 0 || tile === 2 || (tile === 3 && currentTile === 3);
+
         return passable;
     }
 

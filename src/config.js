@@ -1,5 +1,6 @@
 export const config = {
     tileSize: 40,
+    //maxMovement: null,
     showCoordinates: false,
     showTileBorders: false,
     debugPathfinding: true,

@@ -70,8 +70,6 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        console.log('Grid:', grid);
-
         return grid;
     }
 
@@ -95,12 +93,14 @@ export default class GameScene extends Phaser.Scene {
                     this.player.currentRoom = null;
                 });
             }
-        } else {
+        } else if (this.isPlayerOnDoor(startX, startY, targetX, targetY)) {
             // Se o jogador está fora da sala, pode mover para caminho ou entrar em uma sala através de uma porta
+            if (targetTile === 3 || targetTile === 0) {
+                this.movePlayerToRoom({ x: targetX, y: targetY });
+            }
+        } else {
             if (targetTile === 0 || targetTile === 2) {
                 this.movePlayerTo({ x: targetX, y: targetY });
-            } else if (targetTile === 3 && this.isPlayerOnDoor(startX, startY, targetX, targetY)) {
-                this.movePlayerToRoom({ x: targetX, y: targetY });
             }
         }
     }
@@ -109,12 +109,25 @@ export default class GameScene extends Phaser.Scene {
         const startX = Math.floor(this.player.sprite.x / TILE_SIZE);
         const startY = Math.floor(this.player.sprite.y / TILE_SIZE);
 
-        const path = this.pathfinding.findPath({ x: startX, y: startY }, target);
+        let path = this.pathfinding.findPath({ x: startX, y: startY }, target);
         console.log(startX, startY, target, path);
+
+        // Filtra o caminho para ignorar tiles que estão dentro das salas
+        const filteredPath = path.filter(step => this.pathfinding.grid[step.y][step.x] !== 3);
+        console.log('Filtered Path:', filteredPath);
+
+        // Verifica se o caminho encontrado excede o limite de movimento
+        if (filteredPath.length > config.maxMovement) {
+            console.log(`Movimento excede o limite de ${config.maxMovement} tiles`);
+            return;
+        }
+
         if (path.length > 0) {
             this.moveAlongPath(path, onComplete);
         }
     }
+
+
 
     moveAlongPath(path, onComplete) {
         const tweens = [];
