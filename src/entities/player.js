@@ -24,20 +24,16 @@ export default class Player {
         console.log(`Current position: (${this.sprite.x}, ${this.sprite.y})`);
         console.log(`Current room: ${this.currentRoom ? this.currentRoom.name : 'None'}`);
 
-        // Check if player is in a room
         if (this.currentRoom) {
+            // Check if the player wants to move to a door tile to leave the room
             const doorTiles = this.currentRoom.doors.map(door => ({
                 x: door.x * this.tileSize + this.tileSize / 2,
                 y: door.y * this.tileSize + this.tileSize / 2
             }));
 
-            // Allow movement only to doors or secret passage
-            const canMoveToDoor = doorTiles.some(tile => tile.x === targetX && tile.y === targetY);
-            const canMoveToSecretPassage = this.currentRoom.secretPassage &&
-                targetX === this.currentRoom.secretPassage.x * this.tileSize + this.tileSize / 2 &&
-                targetY === this.currentRoom.secretPassage.y * this.tileSize + this.tileSize / 2;
+            const isMovingToDoor = doorTiles.some(tile => tile.x === targetX && tile.y === targetY);
 
-            if (canMoveToDoor || canMoveToSecretPassage) {
+            if (isMovingToDoor) {
                 this.scene.tweens.add({
                     targets: this.sprite,
                     x: targetX,
@@ -45,13 +41,8 @@ export default class Player {
                     duration: 300,
                     ease: 'Power2',
                     onComplete: () => {
-                        console.log(`Moved to: (${targetX}, ${targetY})`);
-                        if (canMoveToSecretPassage) {
-                            this.useSecretPassage();
-                        }
-                        if (canMoveToDoor) {
-                            this.leaveRoom();
-                        }
+                        console.log(`Moved to door: (${targetX}, ${targetY})`);
+                        this.leaveRoom();
                     }
                 });
             }
@@ -66,6 +57,20 @@ export default class Player {
                     ease: 'Power2',
                     onComplete: () => {
                         console.log(`Moved to: (${targetX}, ${targetY})`);
+
+                        // Check if the player clicked on a room area while standing on a door tile
+                        this.scene.rooms.forEach(room => {
+                            const doorTiles = room.doors.map(door => ({
+                                x: door.x * this.tileSize + this.tileSize / 2,
+                                y: door.y * this.tileSize + this.tileSize / 2
+                            }));
+                            const isOnDoor = doorTiles.some(tile => tile.x === this.sprite.x && tile.y === this.sprite.y);
+                            const clickedOnRoom = pointer.x >= room.roomSprite.x && pointer.x <= room.roomSprite.x + room.roomSprite.displayWidth &&
+                                pointer.y >= room.roomSprite.y && pointer.y <= room.roomSprite.y + room.roomSprite.displayHeight;
+                            if (isOnDoor && clickedOnRoom) {
+                                this.enterRoom(room);
+                            }
+                        });
                     }
                 });
             }
@@ -73,19 +78,12 @@ export default class Player {
     }
 
     enterRoom(room) {
-        // Ensure we only enter the room if the player is centered on a door
-        const playerX = Math.floor(this.sprite.x);
-        const playerY = Math.floor(this.sprite.y);
-        const doorTiles = room.doors.map(door => ({
-            x: door.x * this.tileSize + this.tileSize / 2,
-            y: door.y * this.tileSize + this.tileSize / 2
-        }));
-        const isOnDoor = doorTiles.some(tile => tile.x === playerX && tile.y === playerY);
-
-        if (isOnDoor) {
-            console.log(`Entered room: ${room.name}`);
-            this.currentRoom = room;
-        }
+        console.log(`Entered room: ${room.name}`);
+        this.currentRoom = room;
+        this.sprite.setPosition(
+            room.roomSprite.x + room.roomSprite.displayWidth / 2,
+            room.roomSprite.y + room.roomSprite.displayHeight / 2
+        ); // Move player to the center of the room
     }
 
     leaveRoom() {
