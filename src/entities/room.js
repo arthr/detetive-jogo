@@ -16,17 +16,24 @@ export default class Room {
 
     createRoom(roomConfig) {
         // Cria a sala usando a imagem
-        this.roomSprite = this.scene.physics.add.staticImage(
+        this.roomSprite = this.scene.add.image(
             roomConfig.x * this.tileSize,
             roomConfig.y * this.tileSize,
             roomConfig.image
         ).setOrigin(0, 0).setDisplaySize(roomConfig.width * this.tileSize, roomConfig.height * this.tileSize);
 
+        // Adiciona uma colisão invisível para a sala
+        this.roomCollider = this.scene.physics.add.staticImage(
+            roomConfig.x * this.tileSize,
+            roomConfig.y * this.tileSize,
+            null
+        ).setOrigin(0, 0).setDisplaySize(roomConfig.width * this.tileSize, roomConfig.height * this.tileSize).setVisible(false);
+
         // Define áreas de colisão para a sala
-        this.roomSprite.body.setSize(roomConfig.width * this.tileSize, roomConfig.height * this.tileSize);
-        this.roomSprite.body.setOffset(0, 0);
-        this.roomSprite.body.immovable = true;
-        this.roomSprite.body.moves = false;
+        this.roomCollider.body.setSize(roomConfig.width * this.tileSize, roomConfig.height * this.tileSize);
+        this.roomCollider.body.setOffset(0, 0);
+        this.roomCollider.body.immovable = true;
+        this.roomCollider.body.moves = false;
 
         // Cria as portas
         roomConfig.doors.forEach(door => {

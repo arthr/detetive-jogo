@@ -19,7 +19,7 @@ export default class GameScene extends Phaser.Scene {
         // Cria as salas
         this.rooms = config.rooms.map(roomConfig => new Room(this, roomConfig, TILE_SIZE));
 
-        // Cria a grid para pathfinding (0 = caminho, 1 = sala, 2 = porta)
+        // Cria a grid para pathfinding (0 = caminho, 1 = obstáculo, 2 = porta, 3 = sala)
         const grid = this.createGrid();
 
         // Cria o pathfinding
@@ -42,7 +42,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     createGrid() {
-        // Cria uma grid inicial onde 0 representa um caminho, 1 representa uma sala, e 2 representa uma porta
+        // Cria uma grid inicial onde 0 representa um caminho, 1 representa um obstáculo, 2 representa uma porta, e 3 representa uma sala
         const grid = [];
         for (let y = 0; y < Math.ceil(this.scale.height / TILE_SIZE); y++) {
             const row = [];
@@ -54,23 +54,20 @@ export default class GameScene extends Phaser.Scene {
 
         // Marcar as salas e portas na grid
         this.rooms.forEach(room => {
-            if (room) {
-                console.log(room.name, room);
-                for (let y = 0; y < room.height; y++) {
-                    for (let x = 0; x < room.width; x++) {
-                        const gridX = room.x + x;
-                        const gridY = room.y + y;
-                        if (this.isValidTile(gridX, gridY)) {
-                            grid[gridY][gridX] = 1; // Marca como sala
-                        }
+            for (let y = 0; y < room.height; y++) {
+                for (let x = 0; x < room.width; x++) {
+                    const gridX = room.x + x;
+                    const gridY = room.y + y;
+                    if (this.isValidTile(gridX, gridY)) {
+                        grid[gridY][gridX] = 3; // Marca como sala
                     }
                 }
-                room.doors.forEach(door => {
-                    if (this.isValidTile(door.x, door.y)) {
-                        grid[door.y][door.x] = 2; // Marca as portas como passáveis
-                    }
-                });
             }
+            room.doors.forEach(door => {
+                if (this.isValidTile(door.x, door.y)) {
+                    grid[door.y][door.x] = 2; // Marca as portas como passáveis
+                }
+            });
         });
 
         return grid;
@@ -89,8 +86,20 @@ export default class GameScene extends Phaser.Scene {
 
         const targetTile = this.pathfinding.grid[targetY] && this.pathfinding.grid[targetY][targetX];
 
-        if (targetTile === 0 || targetTile === 2) { // Caminho ou porta
-            this.movePlayerTo({ x: targetX, y: targetY });
+        if (this.player.currentRoom) {
+            // Se o jogador está dentro de uma sala, só pode sair através das portas
+            if (targetTile === 2) {
+                this.movePlayerTo({ x: targetX, y: targetY }, () => {
+                    this.player.currentRoom = null;
+                });
+            }
+        } else {
+            // Se o jogador está fora da sala, pode mover para caminho ou entrar em uma sala através de uma porta
+            if (targetTile === 0 || targetTile === 2) {
+                this.movePlayerTo({ x: targetX, y: targetY });
+            } else if (targetTile === 3 && this.isPlayerOnDoor(startX, startY)) {
+                this.movePlayerToRoom({ x: targetX, y: targetY });
+            }
         }
     }
 
@@ -121,28 +130,73 @@ export default class GameScene extends Phaser.Scene {
         });
     }
 
+    movePlayerToRoom(target) {
+        // Mover jogador para dentro da sala
+        const room = this.rooms.find(room => {
+            return target.x >= room.x && target.x < room.x + room.width &&
+                target.y >= room.y && target.y < room.y + room.height;
+        });
+
+        if (room) {
+            const targetX = (room.x + room.width / 2) * TILE_SIZE;
+            const targetY = (room.y + room.height / 2) * TILE_SIZE;
+
+            this.tweens.add({
+                targets: this.player.sprite,
+                x: targetX,
+                y: targetY,
+                duration: 200,
+                ease: 'Linear'
+            });
+
+            this.player.currentRoom = room;
+        }
+    }
+
+    isPlayerOnDoor(x, y) {
+        const currentTile = this.pathfinding.grid[y] && this.pathfinding.grid[y][x];
+        return currentTile === 2;
+    }
+
     addDebugPathfindingLayer() {
         const graphics = this.add.graphics();
 
+        // Desenha os caminhos, obstáculos e portas
         for (let y = 0; y < this.pathfinding.grid.length; y++) {
             for (let x = 0; x < this.pathfinding.grid[y].length; x++) {
                 const tile = this.pathfinding.grid[y][x];
                 let color;
                 switch (tile) {
                     case 0: color = 0x00ff00; break; // Caminho
-                    case 1: color = 0x0000ff; break; // Sala
+                    case 1: color = 0xff0000; break; // Obstáculo
                     case 2: color = 0xffff00; break; // Porta
                 }
                 graphics.fillStyle(color, 0.5);
                 graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
-                // Adiciona o número do tipo do tile no centro
-                this.add.text(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2, tile, {
-                    fontSize: '12px',
-                    color: '#ffffff',
-                    align: 'center'
-                }).setOrigin(0.5);
+                // Adiciona o número do tipo do tile no centro se não for uma sala
+                if (tile !== 3) {
+                    this.add.text(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2, tile, {
+                        fontSize: '12px',
+                        color: '#ffffff',
+                        align: 'center'
+                    }).setOrigin(0.5);
+                }
             }
         }
+
+        // Desenha as salas como blocos únicos
+        this.rooms.forEach(room => {
+            graphics.fillStyle(0x0000ff, 0.5); // Cor para as salas
+            graphics.fillRect(room.x * TILE_SIZE, room.y * TILE_SIZE, room.width * TILE_SIZE, room.height * TILE_SIZE);
+
+            // Adiciona o número do tipo do tile no centro da sala
+            this.add.text(
+                (room.x + room.width / 2) * TILE_SIZE,
+                (room.y + room.height / 2) * TILE_SIZE,
+                '3',
+                { fontSize: '12px', color: '#ffffff', align: 'center' }
+            ).setOrigin(0.5);
+        });
     }
 }
