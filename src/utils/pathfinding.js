@@ -101,7 +101,6 @@ export default class Pathfinding {
         return []; // Nenhum caminho encontrado
     }
 
-
     // Função para criar um nó
     createNode(x, y, parent) {
         return {
