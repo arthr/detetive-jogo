@@ -20,11 +20,14 @@ export default class Board {
         // Desenha a grade do tabuleiro com a imagem de fundo para cada tile
         for (let y = 0; y < this.scene.scale.height / this.tileSize; y++) {
             for (let x = 0; x < this.scene.scale.width / this.tileSize; x++) {
-                this.scene.add.image(
+                const tile = this.scene.add.image(
                     x * this.tileSize + this.tileSize / 2,
                     y * this.tileSize + this.tileSize / 2,
                     'tile-bg'
                 ).setDisplaySize(this.tileSize, this.tileSize);
+
+                // Aplica o pipeline ao tile
+                tile.setPipeline('TintBrightness');
             }
         }
     }

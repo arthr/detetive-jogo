@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import TintBrightnessPipeline from '../pipelines/TintBrightnessPipeline';
 import playerPiece from '../../assets/images/player.png';
 import tileBackground from '../../assets/images/tile.png';
 import boardBackground from '../../assets/images/board.png';
@@ -20,5 +21,7 @@ export default class BootScene extends Phaser.Scene {
 
     create() {
         this.scene.start('GameScene');
+        // Registrando o pipeline customizado
+        this.game.renderer.pipelines.add('TintBrightness', new TintBrightnessPipeline(this.game));
     }
 }
