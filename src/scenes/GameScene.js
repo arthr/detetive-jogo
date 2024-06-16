@@ -3,7 +3,7 @@ import { config } from '../config';
 import Room from '../entities/room';
 import Player from '../entities/player';
 import Board from '../entities/board';
-import { addDebugLayer } from '../utils/debugLayer'; // Importa a camada de depuração
+import { addDebugTilesLayer } from '../utils/debugTilesLayer'; // Importa a camada de depuração
 
 const TILE_SIZE = config.tileSize;
 
@@ -47,7 +47,7 @@ export default class GameScene extends Phaser.Scene {
 
         // Adiciona a camada de depuração se estiver ativada
         if (config.debugTileLayer) {
-            addDebugLayer(this, this.rooms, TILE_SIZE);
+            addDebugTilesLayer(this, this.rooms, TILE_SIZE);
         }
     }
 }

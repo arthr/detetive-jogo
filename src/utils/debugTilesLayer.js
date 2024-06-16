@@ -1,4 +1,4 @@
-export function addDebugLayer(scene, rooms, tileSize) {
+export function addDebugTilesLayer(scene, rooms, tileSize) {
     const graphics = scene.add.graphics();
     graphics.lineStyle(1, 0x000000, 0.2); // Estilo de linha para a grade
 
@@ -16,13 +16,15 @@ export function addDebugLayer(scene, rooms, tileSize) {
             );
 
             let color = 0x00ff00; // Verde para tiles normais
+
             if (isDoorTile) {
-                color = 0x0000ff; // Azul para tiles de portas
+                color = 0xff0000; // Vermelho para tiles de portas
+                
             } else if (isRoomTile) {
-                color = 0xff0000; // Vermelho para tiles de salas
+                color = 0x0000ff; // Azul para tiles de salas
             }
 
-            graphics.fillStyle(color, 0.2); // Define a cor com transparência
+            graphics.fillStyle(color, 0.6); // Define a cor com transparência
             graphics.fillRect(x * tileSize, y * tileSize, tileSize, tileSize); // Desenha o retângulo
             graphics.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize); // Desenha a grade
         }
