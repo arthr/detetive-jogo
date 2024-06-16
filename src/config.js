@@ -1,5 +1,5 @@
 export const config = {
-    tileSize: 30,
+    tileSize: 40,
     showCoordinates: false,
     showTileBorders: false,
     debugTileLayer: false,
