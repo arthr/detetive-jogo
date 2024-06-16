@@ -70,6 +70,8 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
+        console.log('Grid:', grid);
+
         return grid;
     }
 
@@ -88,7 +90,7 @@ export default class GameScene extends Phaser.Scene {
 
         if (this.player.currentRoom) {
             // Se o jogador está dentro de uma sala, só pode sair através das portas
-            if (targetTile === 2) {
+            if (targetTile === 2 && this.isDoorOfCurrentRoom(targetX, targetY)) {
                 this.movePlayerTo({ x: targetX, y: targetY }, () => {
                     this.player.currentRoom = null;
                 });
@@ -97,7 +99,7 @@ export default class GameScene extends Phaser.Scene {
             // Se o jogador está fora da sala, pode mover para caminho ou entrar em uma sala através de uma porta
             if (targetTile === 0 || targetTile === 2) {
                 this.movePlayerTo({ x: targetX, y: targetY });
-            } else if (targetTile === 3 && this.isPlayerOnDoor(startX, startY)) {
+            } else if (targetTile === 3 && this.isPlayerOnDoor(startX, startY, targetX, targetY)) {
                 this.movePlayerToRoom({ x: targetX, y: targetY });
             }
         }
@@ -108,7 +110,7 @@ export default class GameScene extends Phaser.Scene {
         const startY = Math.floor(this.player.sprite.y / TILE_SIZE);
 
         const path = this.pathfinding.findPath({ x: startX, y: startY }, target);
-
+        console.log(startX, startY, target, path);
         if (path.length > 0) {
             this.moveAlongPath(path, onComplete);
         }
@@ -128,6 +130,8 @@ export default class GameScene extends Phaser.Scene {
                 onComplete: index === path.length - 1 ? onComplete : undefined
             }));
         });
+
+        this.tweens.addMultiple(tweens);
     }
 
     movePlayerToRoom(target) {
@@ -137,7 +141,7 @@ export default class GameScene extends Phaser.Scene {
                 target.y >= room.y && target.y < room.y + room.height;
         });
 
-        if (room) {
+        if (room && this.isPlayerOnDoor(Math.floor(this.player.sprite.x / TILE_SIZE), Math.floor(this.player.sprite.y / TILE_SIZE), target.x, target.y)) {
             const targetX = (room.x + room.width / 2) * TILE_SIZE;
             const targetY = (room.y + room.height / 2) * TILE_SIZE;
 
@@ -153,9 +157,21 @@ export default class GameScene extends Phaser.Scene {
         }
     }
 
-    isPlayerOnDoor(x, y) {
-        const currentTile = this.pathfinding.grid[y] && this.pathfinding.grid[y][x];
-        return currentTile === 2;
+    isPlayerOnDoor(playerX, playerY, targetX, targetY) {
+        const targetRoom = this.rooms.find(room => {
+            return targetX >= room.x && targetX < room.x + room.width &&
+                targetY >= room.y && targetY < room.y + room.height;
+        });
+
+        if (!targetRoom) return false;
+
+        return targetRoom.doors.some(door => door.x === playerX && door.y === playerY);
+    }
+
+    isDoorOfCurrentRoom(targetX, targetY) {
+        const room = this.player.currentRoom;
+        if (!room) return false;
+        return room.doors.some(door => door.x === targetX && door.y === targetY);
     }
 
     addDebugPathfindingLayer() {
