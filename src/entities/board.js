@@ -39,7 +39,7 @@ export default class Board {
                     x * this.tileSize,
                     y * this.tileSize,
                     `(${x},${y})`,
-                    { fontSize: '12px', fill: color }
+                    { fontSize: '10px', fill: color }
                 ).setOrigin(0, 0);
             }
         }
