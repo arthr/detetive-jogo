@@ -9,10 +9,10 @@ export default class Board {
         this.tileSize = TILE_SIZE;
         this.createBoard();
         if (config.showCoordinates) {
-            this.showTileCoordinates();
+            this.showTileCoordinates(config.coordinateColor);
         }
         if (config.showTileBorders) {
-            this.showTileBorders();
+            this.showTileBorders(config.tileBorderColorNumber);
         }
     }
 
@@ -32,22 +32,22 @@ export default class Board {
         }
     }
 
-    showTileCoordinates() {
+    showTileCoordinates(color) {
         for (let y = 0; y < Math.floor(this.scene.scale.height / this.tileSize); y++) {
             for (let x = 0; x < Math.floor(this.scene.scale.width / this.tileSize); x++) {
                 this.scene.add.text(
                     x * this.tileSize,
                     y * this.tileSize,
                     `(${x},${y})`,
-                    { fontSize: '12px', fill: '#fff' }
+                    { fontSize: '12px', fill: color }
                 ).setOrigin(0, 0);
             }
         }
     }
 
-    showTileBorders() {
+    showTileBorders(color) {
         const graphics = this.scene.add.graphics();
-        graphics.lineStyle(1, 0x000000, 0.3);
+        graphics.lineStyle(1, color, 1);
 
         for (let y = 0; y < Math.floor(this.scene.scale.height / this.tileSize); y++) {
             for (let x = 0; x < Math.floor(this.scene.scale.width / this.tileSize); x++) {

@@ -1,8 +1,10 @@
 export const config = {
     tileSize: 50,
     maxMovement: 6,
-    showCoordinates: false,
-    showTileBorders: false,
+    showCoordinates: true,
+    coordinateColor: '#000',
+    showTileBorders: true,
+    tileBorderColorNumber: 0xff0000,
     debugPathfinding: false,
     rooms: [
         { x: 0, y: 0, width: 7, height: 5, name: 'Restaurante', image: 'restaurante', doors: [{ x: 7, y: 2, direction: 'left' }] },

@@ -8,8 +8,8 @@ export default class Player {
         this.scene = scene;
         this.tileSize = tileSize;
         this.sprite = this.scene.physics.add.sprite(
-            (startRoom.x + 1) * tileSize + tileSize / 2,
-            (startRoom.y + 1) * tileSize + tileSize / 2,
+            (startRoom.x + (startRoom.width / 2)) * tileSize,
+            (startRoom.y + (startRoom.height / 2)) * tileSize,
             'player'
         );
         this.currentRoom = startRoom;
